@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="robots" content="noindex" />
+  <title>Marcador</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="data:," />
+</head>
+<body>
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+  <noscript>
+    <p class="banner banner-warn" style="margin:16px">Este marcador necesita JavaScript activado.</p>
+  </noscript>
+
+  <main id="screen-login" class="screen-login" hidden>
+    <div class="login-card">
+      <header class="login-head">
+        <h1>Marcador</h1>
+        <p class="muted">Tabla de posiciones de la ronda. Elige quién eres y entra con tu PIN.</p>
+      </header>
+
+      <form id="login-form" novalidate>
+        <div class="field">
+          <label for="who">Quién eres</label>
+          <select id="who" name="who" required></select>
+        </div>
+
+        <div class="field">
+          <label for="pin">PIN personal</label>
+          <input id="pin" name="pin" type="password" autocomplete="off" required />
+        </div>
+
+        <p id="login-error" class="form-error" role="alert" hidden></p>
+
+        <button id="login-submit" class="btn btn-primary btn-block" type="submit">Entrar</button>
+      </form>
+
+      <p class="login-foot muted">
+        Tu PIN se revisa en el servidor, así que nadie puede sumarle puntos a otro.
+      </p>
+    </div>
+  </main>
+
+  <div id="screen-app" class="screen-app" hidden>
+    <div class="wrap" id="contenido">
+      <header class="topbar">
+        <div class="brand">
+          <h1>Marcador</h1>
+          <p id="round-label" class="muted">—</p>
+        </div>
+        <div class="session">
+          <span id="user-name" class="who">—</span>
+          <button id="logout" class="btn btn-ghost btn-sm" type="button">Salir</button>
+        </div>
+      </header>
+
+      <section id="app-error" class="panel panel-error" hidden aria-labelledby="err-heading">
+        <h2 id="err-heading">No se pudo cargar el marcador</h2>
+        <p id="app-error-msg" class="muted">—</p>
+        <button id="retry" class="btn btn-secondary" type="button">Reintentar</button>
+      </section>
+
+      <section id="app-loading" class="panel" hidden aria-busy="true" aria-live="polite">
+        <p class="muted">Cargando marcador…</p>
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>
+        <div class="skeleton skeleton-short"></div>
+      </section>
+
+      <div id="app-content" hidden>
+        <section class="panel countdown" aria-labelledby="cd-heading">
+          <div class="panel-head">
+            <h2 id="cd-heading">Cuenta regresiva</h2>
+            <span id="countdown-label" class="pill">—</span>
+          </div>
+
+          <div class="timer" id="timer" role="timer" aria-live="off">
+            <div class="unit"><span class="num" id="cd-days">00</span><span class="lab">días</span></div>
+            <div class="unit"><span class="num" id="cd-hours">00</span><span class="lab">horas</span></div>
+            <div class="unit"><span class="num" id="cd-mins">00</span><span class="lab">min</span></div>
+            <div class="unit"><span class="num" id="cd-secs">00</span><span class="lab">seg</span></div>
+          </div>
+
+          <div class="progress" id="round-progress" role="progressbar" aria-label="Avance de la ronda" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <span class="fill" id="round-fill"></span>
+          </div>
+          <p class="meta" id="round-meta">—</p>
+        </section>
+
+        <div class="columns">
+          <section class="panel mine" aria-labelledby="mine-heading">
+            <div class="panel-head">
+              <h2 id="mine-heading">Mi marcador</h2>
+              <span id="my-goal-badge" class="pill pill-good" hidden>Meta cumplida</span>
+            </div>
+
+            <p id="my-name" class="myname">—</p>
+
+            <p class="bignum" id="my-bignum">
+              <span id="my-points">0</span><span class="slash">/</span><span id="my-goal">5</span>
+            </p>
+
+            <div class="progress" id="my-progress" role="progressbar" aria-label="Mi avance hacia la meta" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0">
+              <span class="fill fill-good" id="my-fill"></span>
+            </div>
+
+            <button id="add-point" class="btn btn-primary btn-xl" type="button">+1 punto</button>
+            <p class="note" id="my-note">—</p>
+          </section>
+
+          <section class="panel board" aria-labelledby="board-heading">
+            <div class="panel-head">
+              <h2 id="board-heading">Tabla de posiciones</h2>
+            </div>
+
+            <table>
+              <caption class="sr-only">Puntos por persona en la ronda actual</caption>
+              <thead>
+                <tr>
+                  <th scope="col" class="col-rank">#</th>
+                  <th scope="col">Persona</th>
+                  <th scope="col" class="num">Puntos</th>
+                  <th scope="col" class="num col-goal">Meta</th>
+                  <th scope="col" class="col-last">Última</th>
+                </tr>
+              </thead>
+              <tbody id="board-body"></tbody>
+            </table>
+          </section>
+        </div>
+
+        <section class="panel status" aria-labelledby="status-heading">
+          <h2 id="status-heading" class="sr-only">Estado</h2>
+          <div class="status-line">
+            <span id="status-conn" class="dot">—</span>
+            <span id="status-updated" class="muted">—</span>
+            <button id="refresh" class="btn btn-ghost btn-sm" type="button">Actualizar</button>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
