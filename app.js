@@ -4,8 +4,8 @@ const TZ = "America/Bogota";
 const STORE = { session: "pajas.session", board: "pajas.board" };
 
 const JSONP_TIMEOUT = 15000;
-const POLL_ATTEMPTS = 5;
-const POLL_DELAY = 900;
+const POLL_ATTEMPTS = 6;
+const POLL_DELAY = 1100;
 const REFRESH_SECONDS = 20;
 
 const state = {
